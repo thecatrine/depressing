@@ -1,0 +1,30 @@
+{
+  "name": "depressing",
+  "mode": "development",
+  "version": "1.0.0",
+  "description": "",
+  "main": "depressing.js",
+  "dependencies": {},
+  "devDependencies": {
+    "webpack": "^4.0.1",
+    "webpack-cli": "^2.0.10",
+    "webpack-dev-server": "^3.1.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack",
+    "watch": "webpack --watch",
+    "start": "webpack-dev-server --open --mode development"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thecatrine/depressing.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/thecatrine/depressing/issues"
+  },
+  "homepage": "https://github.com/thecatrine/depressing#readme"
+}
