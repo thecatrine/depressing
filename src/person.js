@@ -1,4 +1,5 @@
 import * as data from './depressing_data'
+import { commas } from './utils'
 
 var h = maquette.h;
 
@@ -40,14 +41,20 @@ export class DepressingPerson {
     this.logs = new DepressingLog()
   }
 
+  record(message) {
+    this.logs.record(this.age, message);
+  }
+
   render() {
     return h('div.person', [
       h('div.name', [this.name]),
       h('div.sex', [this.sex]),
       h('div.age', ["Age: " + this.age.toString()]),
-      h('div.cash', ["Cash: $" + this.cash.toString()]),
-      h('div.investments', ["Invested: $" + this.invested.toString()]),
-      h('div.debt', ["Debt: $" + this.debt.toString()]),
+      h('div.salary', ["Salary: $" + commas(this.salary)]),
+      h('div.expenses', ["Expenses: -$" + commas(this.expenses)]),
+      h('div.cash', ["Cash: $" + commas(this.cash)]),
+      h('div.investments', ["Invested: $" + commas(this.invested)]),
+      h('div.debt', ["Debt: -$" + commas(this.debt)]),
       this.logs.render()
     ]);
   }

@@ -5,3 +5,18 @@ div.person {
 div.name {
   font-weight: bold;
 }
+
+div.person {
+  width: 500px;
+  padding: 3px;
+  border-style: solid;
+}
+
+div.depressing-game {
+  display: flex;
+  flex-direction: row;
+}
+
+button.liveButton {
+  height: 20px;
+}
