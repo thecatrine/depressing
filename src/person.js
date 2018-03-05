@@ -6,7 +6,6 @@ var h = maquette.h;
 export class DepressingLog {
   constructor() {
     this._log = []
-    this.record(18, "You start your life.");
   }
 
   record(age, message) {
@@ -26,7 +25,9 @@ export class DepressingLog {
 }
 
 export class DepressingPerson {
-  constructor() {
+  constructor(hideLogs) {
+    this.isPlayer = false
+    this.id = Math.random()
     this.sex = Math.random() > 0.5 ? 'male' : 'female'
     this.name = data.random_name(this.sex)
     this.age = 18
@@ -39,14 +40,30 @@ export class DepressingPerson {
     this.delors = 0
     this.dead = false
     this.logs = new DepressingLog()
+    this.hideLogs = hideLogs
   }
 
+  words() {
+    if (this.isPlayer) {
+      return {
+        address:"You",
+        pasttobe: "were",
+        possesive: "your"
+      };
+    } else {
+      return {
+        address: this.name,
+        pasttobe: "was",
+        possesive: "their"
+      };
+    }
+  }
   record(message) {
     this.logs.record(this.age, message);
   }
 
-  render() {
-    return h('div.person', [
+  render(options) {
+    return h(options && options.small ? 'div.person-small' : 'div.person', {key: this.id}, [
       h('div.name', [this.name]),
       h('div.sex', [this.sex]),
       h('div.age', ["Age: " + this.age.toString()]),
@@ -55,7 +72,7 @@ export class DepressingPerson {
       h('div.cash', ["Cash: $" + commas(this.cash)]),
       h('div.investments', ["Invested: $" + commas(this.invested)]),
       h('div.debt', ["Debt: -$" + commas(this.debt)]),
-      this.logs.render()
+      this.hideLogs ? undefined : this.logs.render()
     ]);
   }
 }

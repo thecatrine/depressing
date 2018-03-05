@@ -7,14 +7,48 @@ div.name {
 }
 
 div.person {
-  width: 500px;
+  width: 600px;
   padding: 3px;
   border-style: solid;
+  flex: 1;
 }
 
-div.depressing-game {
+div.person-small {
+  width: 100px;
+  padding: 3px;
+  border-style: solid;
+  flex: 0 0 33.33%;
+}
+
+div#people {
+  display: flex;
+  flex-direction: column;
+  width: 620px;
+}
+
+div#depressing-game {
   display: flex;
   flex-direction: row;
+}
+
+div#ui {
+  diplay: flex;
+  flex-direction: column;
+}
+
+label#total_money {
+  opacity: 0;
+}
+
+div#shop {
+  opacity: 0;
+  display: none;
+}
+
+.fadeout {
+  -webkit-transition 2s ease-out opacity;
+  transition: 2s ease-out opacity;
+  opacity: 0;
 }
 
 button.liveButton {

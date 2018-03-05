@@ -5,7 +5,9 @@
   "description": "",
   "main": "depressing.js",
   "dependencies": {
-    "npm": "^5.7.1"
+    "maquette-css-transitions": "^1.1.0",
+    "npm": "^5.7.1",
+    "velocity": "^0.7.2"
   },
   "devDependencies": {
     "webpack": "^4.0.1",
