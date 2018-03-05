@@ -1,6 +1,6 @@
 import { DepressingPerson } from './person'
 import * as data from './depressing_data'
-import { commas } from './utils'
+import { commas, setUiState } from './utils'
 
 var h = maquette.h;
 
@@ -27,6 +27,12 @@ class DepressingGame {
     this.gameState = validGameStates.first_life;
     this.needsAdvanceYear = false;
 
+    // For storing things the user enters.
+    this.uiState = {
+      invest: 0,
+      debt: 0
+    };
+
     var projector = maquette.createProjector();
   }
 
@@ -36,9 +42,37 @@ class DepressingGame {
 
   renderUI() {
     if (this.gameState == validGameStates.first_life) {
-      return h('button.liveButton', {onclick: () => this.liveButton()}, ['Play the game'])
+      return h('div.ui', [
+        h('div.field',[
+          h('label', [`Invest $${commas(this.uiState.invest)}`]),
+          h('div.control', [
+            h('input.slider', {
+              type: 'range',
+              min: 0,
+              max: this.person.cash,
+              step: 1,
+              value: this.uiState.invest,
+              oninput:  setUiState(this.uiState, 'invest')
+            })
+          ]),
+        ]),
+        h('div.field',[
+          h('label', [`Pay debt $${commas(this.uiState.debt)}`]),
+          h('div.control', [
+            h('input.slider', {
+              type: 'range',
+              min: 0,
+              max: Math.min(this.person.cash - this.uiState.invest, this.person.debt),
+              step: 1,
+              value: this.uiState.debt,
+              oninput:  setUiState(this.uiState, 'debt')
+            })
+          ]),
+        ]),
+        h('button.liveButton', {onclick: () => this.liveButton()}, ['Play the game'])
+      ]);
     } else {
-      return h('p.error', [`This is a weird state: ${this.gameState}`])
+      return h('p.error', [`This is a weird state: ${this.gameState}`]);
     }
   }
 
@@ -72,18 +106,31 @@ class DepressingGame {
       } else {
         p.logs.record(p.age, `Had to go into debt - $${commas(new_debt)}.`);
       }
-      p.debt -= shortfall;
+      p.debt += shortfall;
     } else {
       p.cash -= p.expenses;
     }
   }
 
-  updatePerson(p) {
+  updatePerson(p, invest, debt) {
       p.age += 1;
 
       this.updateSalary(p);
       this.updateCash(p);
       // Do debt and interest
+      if (invest > 0) {
+        p.cash -= invest;
+        p.invested += invest;
+      }
+
+      if (debt > 0) {
+        p.cash -= debt;
+        p.debt -= debt;
+      }
+      // Do interest
+      p.debt = Math.round(p.debt*1.04);
+
+      p.expenses = Math.round(p.expenses * (1 + data.VERY_DEPRESSING_DATA.inflation));
       // Do age and death
       var age = Math.min(119, p.age);
       var deathRate = data.VERY_DEPRESSING_DATA.death_rates[age][p.sex];
@@ -96,7 +143,13 @@ class DepressingGame {
   update(delta) {
     if (this.needsAdvanceYear) {
       // Advance time a year and have events happen.
-      this.updatePerson(this.person);
+      this.updatePerson(
+        this.person,
+        parseInt(this.uiState.invest),
+        parseInt(this.uiState.debt)
+      );
+      this.uiState.invest = 0;
+      this.uiState.debt = 0;
 
       this.needsAdvanceYear = false;
     }
